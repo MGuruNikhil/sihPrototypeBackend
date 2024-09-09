@@ -53,9 +53,9 @@ app.post('/', async function (req, res) {
             id: '1',
         };
 
-        const createdLogs = await ToDo.create(newLogs);
+        const createdLogs = await Logs.create(newLogs);
 
-        createdLogs.logs.push.apply(createdLogs.logs, message);
+        createdLogs.logs.push(message);
 
         await createdLogs.save();
 
@@ -63,7 +63,7 @@ app.post('/', async function (req, res) {
             message: "Log created successfully",
         });
     } else {
-        logs.logs.push.apply(logs.logs, message);
+        logs.logs.push(message);
 
         await logs.save();
 
