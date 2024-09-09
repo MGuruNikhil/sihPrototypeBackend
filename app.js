@@ -28,50 +28,54 @@ app.use(cors());
 
 app.get('/', async function (req, res) {
 
-    let logs = await Logs.findOne({ id: '1' });
-    if(!logs) {
-        return res.status(200).render('index', { logs: [] });
-    }
+    return res.status(200).send({
+        message: "Hello World",
+    })
 
-    return res.status(200).render('index', { logs: logs.logs });
+    // let logs = await Logs.findOne({ id: '1' });
+    // if(!logs) {
+    //     return res.status(200).render('index', { logs: [] });
+    // }
 
-});
-
-app.post('/', async function (req, res) {
-    const { message } = req.body;
-
-    if (!message) {
-        return res.status(400).send({
-            message: "Send all the required data (message field)",
-        });
-    }
-
-    let logs = await Logs.findOne({ id: '1' });
-    if(!logs) {
-        const newLogs = {
-            logs: [],
-            id: '1',
-        };
-
-        const createdLogs = await Logs.create(newLogs);
-
-        createdLogs.logs.push(message);
-
-        await createdLogs.save();
-
-        return res.status(201).send({
-            message: "Log created successfully",
-        });
-    } else {
-        logs.logs.push(message);
-
-        await logs.save();
-
-        return res.status(201).send({
-            message: "Log added successfully",
-        });
-    }
+    // return res.status(200).render('index', { logs: logs.logs });
 
 });
+
+// app.post('/', async function (req, res) {
+//     const { message } = req.body;
+
+//     if (!message) {
+//         return res.status(400).send({
+//             message: "Send all the required data (message field)",
+//         });
+//     }
+
+//     let logs = await Logs.findOne({ id: '1' });
+//     if(!logs) {
+//         const newLogs = {
+//             logs: [],
+//             id: '1',
+//         };
+
+//         const createdLogs = await Logs.create(newLogs);
+
+//         createdLogs.logs.push(message);
+
+//         await createdLogs.save();
+
+//         return res.status(201).send({
+//             message: "Log created successfully",
+//         });
+//     } else {
+//         logs.logs.push(message);
+
+//         await logs.save();
+
+//         return res.status(201).send({
+//             message: "Log added successfully",
+//         });
+//     }
+
+// });
 
 export default app;
