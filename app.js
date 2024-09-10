@@ -4,16 +4,16 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
 import 'dotenv/config';
-import bodyParser from "body-parser";
 import { Logs } from './model/logModel.js';
 
 const app = express();
+
+app.use(express.json());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }))
 
 // CORS Configuration for deployment
 // app.use(cors({
@@ -27,17 +27,19 @@ app.use(cors());
 
 app.get('/', async function (req, res) {
 
-    let logs = await Logs.findOne({ id: '1' });
-    if(!logs) {
-        return res.status(200).render('index', { logs: [] });
-    }
+    let logs = await Logs.find();
 
-    return res.status(200).render('index', { logs: logs.logs });
+    if(logs.length === 0) {
+        return res.render('index', { logs: [] });
+    }
+    return res.render('index', { logs });
 
 });
 
 app.post('/', async function (req, res) {
     const { message } = req.body;
+
+    console.log(req.body);
 
     if (!message) {
         return res.status(400).send({
@@ -45,31 +47,13 @@ app.post('/', async function (req, res) {
         });
     }
 
-    let logs = await Logs.findOne({ id: '1' });
-    if(!logs) {
-        const newLogs = {
-            logs: [],
-            id: '1',
-        };
+    const log = await Logs.create({
+        log: message
+    });
 
-        const createdLogs = await Logs.create(newLogs);
-
-        createdLogs.logs.push(message);
-
-        await createdLogs.save();
-
-        return res.status(201).send({
-            message: "Log created successfully",
-        });
-    } else {
-        logs.logs.push(message);
-
-        await logs.save();
-
-        return res.status(201).send({
-            message: "Log added successfully",
-        });
-    }
+    return res.status(201).send({
+        message: "Log created successfully",
+    });
 
 });
 

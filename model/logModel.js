@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 
 const logSchema = new mongoose.Schema({
-    logs: [],
-    id: String,
-}, { minimize: false });
+    log: String
+});
 
 
 export const Logs = new mongoose.model("Log", logSchema);
